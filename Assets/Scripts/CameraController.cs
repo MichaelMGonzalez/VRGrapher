@@ -69,7 +69,7 @@ public class CameraController : MonoBehaviour {
         if( radius < 4 )
             radius = 4;
         if (Network.isServer)
-            networkView.RPC("updateRTP", RPCMode.OthersBuffered, radius, horizontal, vertical);
+            GetComponent<NetworkView>().RPC("updateRTP", RPCMode.OthersBuffered, radius, horizontal, vertical);
     }
     void detectMouseWheel()
     {
@@ -82,7 +82,7 @@ public class CameraController : MonoBehaviour {
             radius++;
         }
         if (Network.isServer)
-            networkView.RPC("updateRTP", RPCMode.OthersBuffered, radius, horizontal, vertical);
+            GetComponent<NetworkView>().RPC("updateRTP", RPCMode.OthersBuffered, radius, horizontal, vertical);
     }
     [RPC]
     private void updateRTP(float rad, float theta, float phi)

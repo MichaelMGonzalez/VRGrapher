@@ -50,7 +50,7 @@ public class Grapher1 : MonoBehaviour {
 			c.g = p.y;
 			points[i].color = c;
 		}
-		particleSystem.SetParticles(points, points.Length);
+		GetComponent<ParticleSystem>().SetParticles(points, points.Length);
 	}
 	
 	private static float Linear (float x) {

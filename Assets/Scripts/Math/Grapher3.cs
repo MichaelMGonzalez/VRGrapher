@@ -66,7 +66,7 @@ public class Grapher3 : MonoBehaviour {
 				points[i].color = c;
 			}
 		}
-		particleSystem.SetParticles(points, points.Length);
+		GetComponent<ParticleSystem>().SetParticles(points, points.Length);
 	}
 	
 	private static float Linear (Vector3 p, float t) {

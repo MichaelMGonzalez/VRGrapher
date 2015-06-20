@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
+using MathFunctionParser;
 
-public class Grapher2 : MonoBehaviour {
+public class Grapher : MonoBehaviour {
 
 	public enum FunctionOption {
 		Linear,
@@ -20,12 +21,17 @@ public class Grapher2 : MonoBehaviour {
 	};
 
 	public FunctionOption function;
+    private Parser functionParser;
+    private Evaluator evaluator;
 
 	[Range(10, 100)]
 	public int resolution = 10;
 
 	private int currentResolution;
 	private ParticleSystem.Particle[] points;
+    void Start() {
+        functionParser = new Parser();
+    }
 
 	private void CreatePoints () {
 		currentResolution = resolution;
@@ -33,14 +39,19 @@ public class Grapher2 : MonoBehaviour {
 		float increment = 1f / (resolution - 1);
 		int i = 0;
 		for (int x = 0; x < resolution; x++) {
-			for (int z = 0; z < resolution; z++) {
-				Vector3 p = new Vector3(x * increment, 0f, z * increment);
+			for (int y = 0; y < resolution; y++) {
+				Vector3 p = new Vector3(x * increment, y * increment, 0f);
 				points[i].position = p;
-				points[i].color = new Color(p.x, 0f, p.z);
+				points[i].color = new Color(p.x, p.y, 0f);
 				points[i++].size = 0.1f;
 			}
 		}
 	}
+
+    void SetPoints()
+    {
+
+    }
 
 	void Update () {
 		if (currentResolution != resolution || points == null) {

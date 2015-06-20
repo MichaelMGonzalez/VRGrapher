@@ -13,7 +13,7 @@ public class Float : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         if (Input.GetKeyDown("e")  )
-            rigidbody.AddForce(currV, ForceMode.Acceleration );
+            GetComponent<Rigidbody>().AddForce(currV, ForceMode.Acceleration );
         /*else
             rigidbody.velocity = Vector3.zero;
         */
