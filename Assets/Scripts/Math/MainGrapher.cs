@@ -1,75 +1,67 @@
 ﻿using UnityEngine;
 using MathFunctionParser;
 
-public class Grapher : MonoBehaviour {
+public class MainGrapher : MonoBehaviour {
 
-	public enum FunctionOption {
-		Linear,
-		Exponential,
-		Parabola,
-		Sine,
-		Ripple
-	}
+	
 
-	private delegate float FunctionDelegate (Vector3 p, float t);
-	private static FunctionDelegate[] functionDelegates = {
-		Linear,
-		Exponential,
-		Parabola,
-		Sine,
-		Ripple
-	};
-
-	public FunctionOption function;
+	public string function = "(x *y)";
     private Parser functionParser;
     private Evaluator evaluator;
 
-	[Range(10, 100)]
+	[Range(5, 100)]
 	public int resolution = 10;
 
 	private int currentResolution;
 	private ParticleSystem.Particle[] points;
     void Start() {
         functionParser = new Parser();
+        CreatePoints();
+        SetPoints(function);
     }
 
 	private void CreatePoints () {
 		currentResolution = resolution;
-		points = new ParticleSystem.Particle[resolution * resolution];
+		points = new ParticleSystem.Particle[8* resolution * resolution];
 		float increment = 1f / (resolution - 1);
 		int i = 0;
-		for (int x = 0; x < resolution; x++) {
-			for (int y = 0; y < resolution; y++) {
-				Vector3 p = new Vector3(x * increment, y * increment, 0f);
+		for (int x = 0; x < 2*resolution; x++) {
+			for (int y = 0; y < 2*resolution; y++) {
+				Vector3 p = new Vector3(x * increment, 0f, y * increment);
 				points[i].position = p;
-				points[i].color = new Color(p.x, p.y, 0f);
+				points[i].color = new Color(p.x, 0f, p.y);
 				points[i++].size = 0.1f;
 			}
 		}
 	}
 
-    void SetPoints()
+    public void SetPoints( string function )
     {
-
+        evaluator = functionParser.Parse(function);
+        SetPoints();
+    }
+    private void SetPoints()
+    {
+        for (int i = 0; i < points.Length; i++)
+        {
+            Vector3 p = points[i].position;
+            evaluator.SetVariable("x", p.x);
+            evaluator.SetVariable("y", p.z);
+            p.y = (float)evaluator.Evaluate();
+            Debug.Log(p.z);
+			points[i].position = p;
+        }
+		GetComponent<ParticleSystem>().SetParticles(points, points.Length);
     }
 
-	void Update () {
-		if (currentResolution != resolution || points == null) {
-			CreatePoints();
-		}
-		FunctionDelegate f = functionDelegates[(int)function];
-		float t = Time.timeSinceLevelLoad;
-        //float t = 1f;
-		for (int i = 0; i < points.Length; i++) {
-			Vector3 p = points[i].position;
-			p.y = f(p, t);
-			points[i].position = p;
-			Color c = points[i].color;
-			c.g = p.y;
-			points[i].color = c;
-		}
-		GetComponent<ParticleSystem>().SetParticles(points, points.Length);
-	}
+    void Update()
+    {
+        if (currentResolution != resolution || points == null)
+        {
+            CreatePoints();
+            SetPoints();
+        }
+    }
 
 	private static float Linear (Vector3 p, float t) {
 		return p.x;
