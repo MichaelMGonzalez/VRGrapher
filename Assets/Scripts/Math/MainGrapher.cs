@@ -12,6 +12,7 @@ public class MainGrapher : MonoBehaviour {
 
 	[Range(5, 100)]
 	public int resolution = 10;
+    public float range = 2*Mathf.PI;
 
 	private int currentResolution;
 	private ParticleSystem.Particle[] points;
@@ -23,11 +24,13 @@ public class MainGrapher : MonoBehaviour {
 
 	private void CreatePoints () {
 		currentResolution = resolution;
-		points = new ParticleSystem.Particle[16* resolution * resolution];
+        int r = Mathf.CeilToInt(range) * Mathf.CeilToInt(range);
+		points = new ParticleSystem.Particle[r * resolution * resolution];
 		float increment = 1f / (resolution - 1);
 		int i = 0;
-		for (int x = (-2 * resolution) ; x < 2*resolution; x++) {
-			for (int y = (-2 * resolution) ; y < 2*resolution; y++) {
+        r = (int)Mathf.Ceil(range / 2);
+		for (int x = (-1 * r * resolution) ; x < r*resolution; x++) {
+			for (int y = (-1 * r * resolution) ; y < r*resolution; y++) {
 				Vector3 p = new Vector3(x * increment, 0f, y * increment);
 				points[i].position = p;
 				points[i++].size = 0.1f;
