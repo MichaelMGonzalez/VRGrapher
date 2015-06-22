@@ -6,6 +6,7 @@ public class MainGrapher : MonoBehaviour {
 	
 
 	public string function = "(x *y)";
+    public UnityEngine.UI.Text functionInputField;
     private Parser functionParser;
     private Evaluator evaluator;
 
@@ -38,6 +39,10 @@ public class MainGrapher : MonoBehaviour {
     {
         evaluator = functionParser.Parse(function);
         SetPoints();
+    }
+    public void ParseFunction()
+    {
+        SetPoints(functionInputField.text);
     }
     private void SetPoints()
     {
