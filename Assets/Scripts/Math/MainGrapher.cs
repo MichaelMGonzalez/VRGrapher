@@ -22,11 +22,11 @@ public class MainGrapher : MonoBehaviour {
 
 	private void CreatePoints () {
 		currentResolution = resolution;
-		points = new ParticleSystem.Particle[8* resolution * resolution];
+		points = new ParticleSystem.Particle[16* resolution * resolution];
 		float increment = 1f / (resolution - 1);
 		int i = 0;
-		for (int x = 0; x < 2*resolution; x++) {
-			for (int y = 0; y < 2*resolution; y++) {
+		for (int x = (-2 * resolution) ; x < 2*resolution; x++) {
+			for (int y = (-2 * resolution) ; y < 2*resolution; y++) {
 				Vector3 p = new Vector3(x * increment, 0f, y * increment);
 				points[i].position = p;
 				points[i].color = new Color(p.x, 0f, p.y);
@@ -48,7 +48,6 @@ public class MainGrapher : MonoBehaviour {
             evaluator.SetVariable("x", p.x);
             evaluator.SetVariable("y", p.z);
             p.y = (float)evaluator.Evaluate();
-            Debug.Log(p.z);
 			points[i].position = p;
         }
 		GetComponent<ParticleSystem>().SetParticles(points, points.Length);
