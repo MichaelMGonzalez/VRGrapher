@@ -29,7 +29,6 @@ public class MainGrapher : MonoBehaviour {
 			for (int y = (-2 * resolution) ; y < 2*resolution; y++) {
 				Vector3 p = new Vector3(x * increment, 0f, y * increment);
 				points[i].position = p;
-				points[i].color = new Color(p.x, 0f, p.y);
 				points[i++].size = 0.1f;
 			}
 		}
@@ -49,6 +48,7 @@ public class MainGrapher : MonoBehaviour {
             evaluator.SetVariable("y", p.z);
             p.y = (float)evaluator.Evaluate();
 			points[i].position = p;
+            points[i].color = new Color(1 - p.y, .5f - p.y, p.y);
         }
 		GetComponent<ParticleSystem>().SetParticles(points, points.Length);
     }
