@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using MathFunctionParser;
+using System.Collections.Generic;
 
 public class MainGrapher : MonoBehaviour {
 
@@ -8,6 +9,7 @@ public class MainGrapher : MonoBehaviour {
 	public string function = "(x *y)";
     public UnityEngine.UI.Text functionInputField;
     private Parser functionParser;
+    private SortedDictionary<string, Token> db;
     private Evaluator evaluator;
 
 	[Range(5, 100)]
@@ -17,7 +19,9 @@ public class MainGrapher : MonoBehaviour {
 	private int currentResolution;
 	private ParticleSystem.Particle[] points;
     void Start() {
-        functionParser = new Parser();
+        db = ExpressionDB.GetDefaultVarDB();
+        db["t"] = new Token(TokenType.Variable, "t");
+        functionParser = new Parser(db, ExpressionDB.GetDefaultConstDB());
         CreatePoints();
         SetPoints(function);
     }
@@ -54,6 +58,7 @@ public class MainGrapher : MonoBehaviour {
             Vector3 p = points[i].position;
             evaluator.SetVariable("x", p.x);
             evaluator.SetVariable("y", p.z);
+            evaluator.SetVariable("t", Time.time);
             p.y = (float)evaluator.Evaluate();
 			points[i].position = p;
             points[i].color = new Color(1 - p.y, .5f - p.y, p.y);
@@ -63,10 +68,10 @@ public class MainGrapher : MonoBehaviour {
 
     void Update()
     {
+        //SetPoints();
         if (currentResolution != resolution || points == null)
         {
             CreatePoints();
-            SetPoints();
         }
     }
 
